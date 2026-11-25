@@ -1,13 +1,18 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-// One word for the human who signs off: every queue waits on them.
-function entryWord(): string {
-  const word = "Bottleneck";
-  if (!/^\S+$/.test(word) || word.length < 1 || word.length > 30) {
-    throw new Error("entry must be one word of 1-30 characters");
+const OUTPUT_DIRECTORY = "/output";
+const OUTPUT_FILE = join(OUTPUT_DIRECTORY, "entry.txt");
+const ANSWER = "Bottleneck";
+
+function assertSingleToken(value: string): void {
+  const characterCount = [...value].length;
+
+  if (characterCount < 1 || characterCount > 30 || /\s/u.test(value)) {
+    throw new Error("Entry must be one token containing 1-30 characters.");
   }
-  return word;
 }
 
-mkdirSync("/output", { recursive: true });
-writeFileSync("/output/entry.txt", entryWord(), "utf8");
+assertSingleToken(ANSWER);
+mkdirSync(OUTPUT_DIRECTORY, { recursive: true });
+writeFileSync(OUTPUT_FILE, ANSWER, { encoding: "utf8" });
